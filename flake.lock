@@ -1,0 +1,75 @@
+{
+  "nodes": {
+    "edwin": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1795213664,
+        "narHash": "sha256-9aEfOZqG2s26BvMylP2bdcjlNJcDaAkJu085v/Eo+7w=",
+        "owner": "yathxyz",
+        "repo": "edwin",
+        "rev": "a9fe1e1bdaa39fc82d26eeeaab3d171248bb242c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yathxyz",
+        "ref": "v0.1.2",
+        "repo": "edwin",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1791456040,
+        "narHash": "sha256-H83yz/do+hjOO0uujHyH8RgtIQP2v7Mw+cLwcZK/xKc=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e7439b6b14ad3cc35d05608ebca9bce01a25f5f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "edwin": "edwin",
+        "nixpkgs": [
+          "edwin",
+          "nixpkgs"
+        ],
+        "workbench": "workbench"
+      }
+    },
+    "workbench": {
+      "inputs": {
+        "edwin": [
+          "edwin"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795215849,
+        "narHash": "sha256-vo29OiK+1tgvik6nPFbc7vRsUGdnT5Jiy2V4bDw8n2A=",
+        "owner": "yathxyz",
+        "repo": "workbench",
+        "rev": "28626edf44feb474ce25c77a3032ad8e2aa9a326",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yathxyz",
+        "ref": "v0.1.17",
+        "repo": "workbench",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
