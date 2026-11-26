@@ -2,7 +2,7 @@
   description = "Personal packages and NixOS modules pinned to upstream releases";
 
   inputs = {
-    edwin.url = "github:yathxyz/edwin/v0.1.2";
+    edwin.url = "github:yathxyz/edwin/v0.1.3";
     workbench.url = "github:yathxyz/workbench/v0.1.17";
     workbench.inputs.edwin.follows = "edwin";
     workbench.inputs.nixpkgs.follows = "nixpkgs";
