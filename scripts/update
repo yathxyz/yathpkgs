@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+ROOT = Path(__file__).resolve().parent.parent
+FLAKE = ROOT / "flake.nix"
+LOCK = ROOT / "flake.lock"
+PIN = re.compile(
+    r'^\s*(?P<name>[\w-]+)\.url = "github:(?P<repo>[\w.-]+/[\w.-]+)/(?P<tag>v[^/"\s]+)";$',
+    re.MULTILINE,
+)
+
+
+def update(name):
+    source = FLAKE.read_text()
+    pin = next(pin for pin in PIN.finditer(source) if pin["name"] == name)
+    old = pin["tag"]
+    tags = subprocess.check_output(
+        ["git", "ls-remote", "--tags", "--refs", "--sort=-version:refname",
+         f"https://github.com/{pin['repo']}", "refs/tags/v*"],
+        text=True,
+    ).splitlines()
+    if not tags:
+        sys.exit(f"{name}: no v* tags found")
+    new = tags[0].split("\t", 1)[1].removeprefix("refs/tags/")
+    if old == new:
+        print(f"{name}: {old} → {new} (unchanged)", flush=True)
+        return
+
+    # Check the candidate before replacing either pin file.
+    with TemporaryDirectory(prefix=".update-", dir=ROOT) as directory:
+        stage = Path(directory)
+        (stage / FLAKE.name).write_text(source[:pin.start("tag")] + new + source[pin.end("tag"):])
+        shutil.copyfile(LOCK, stage / LOCK.name)
+        ref = f"path:{stage}"
+        subprocess.run(["nix", "flake", "lock", ref], check=True)
+        subprocess.run(["nix", "flake", "check", ref], check=True)
+        (stage / LOCK.name).replace(LOCK)
+        (stage / FLAKE.name).replace(FLAKE)
+    print(f"{name}: {old} → {new}", flush=True)
+
+
+def main(args):
+    names = [pin["name"] for pin in PIN.finditer(FLAKE.read_text())]
+    if args == ["--all"]:
+        selected = names
+    elif len(args) == 1 and args[0] in names:
+        selected = args
+    else:
+        sys.exit(f"usage: scripts/update <{'|'.join(names)}> | --all")
+    for name in selected:
+        update(name)
+
+
+if __name__ == "__main__":
+    try:
+        main(sys.argv[1:])
+    except subprocess.CalledProcessError as error:
+        sys.exit(f"update failed: {error}")
