@@ -5,6 +5,7 @@
     edwin.url = "github:yathxyz/edwin/v0.1.2";
     workbench.url = "github:yathxyz/workbench/v0.1.17";
     workbench.inputs.edwin.follows = "edwin";
+    workbench.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs.follows = "edwin/nixpkgs";
   };
 
